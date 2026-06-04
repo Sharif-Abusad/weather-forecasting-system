@@ -1,0 +1,71 @@
+{
+  "model": "XGBoostClassifier",
+  "features": [
+    "temperature",
+    "surface_pressure",
+    "total_cloud_cover",
+    "low_cloud_cover",
+    "medium_cloud_cover",
+    "high_cloud_cover",
+    "precipitation",
+    "humidity",
+    "wind_speed",
+    "temp_rolling_6",
+    "temp_lag_1",
+    "temp_lag_24",
+    "month"
+  ],
+  "target": "rain_tomorrow",
+  "best_threshold": 0.25,
+  "best_iteration": 145,
+  "train_rows": 6988,
+  "test_rows": 1748,
+  "hyperparameters": {
+    "n_estimators": 300,
+    "max_depth": 5,
+    "learning_rate": 0.05,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "use_label_encoder": false,
+    "eval_metric": "logloss",
+    "early_stopping_rounds": 20,
+    "random_state": 42,
+    "n_jobs": -1
+  },
+  "cv_results": {
+    "mean_accuracy": 0.7851,
+    "std_accuracy": 0.1072,
+    "mean_f1": 0.5771,
+    "std_f1": 0.3392,
+    "mean_roc_auc": 0.7419,
+    "std_roc_auc": 0.1188
+  },
+
+  "roc_auc": 0.9915,
+  "avg_precision": 0.8535,
+
+  "metrics_at_0_5": {
+    "accuracy": 0.9634,
+    "f1_score": 0.5733
+  },
+  "metrics_at_best_threshold": {
+    "threshold": 0.25,
+    "accuracy": 0.9748,
+    "f1_score": 0.8
+  },
+  "feature_importance_gain": {
+    "precipitation": 109.2097,
+    "month": 30.8876,
+    "high_cloud_cover": 29.037,
+    "low_cloud_cover": 20.0055,
+    "medium_cloud_cover": 15.3408,
+    "humidity": 9.8922,
+    "total_cloud_cover": 8.5968,
+    "surface_pressure": 8.4203,
+    "temp_lag_1": 6.9615,
+    "temp_lag_24": 5.6928,
+    "temperature": 5.3129,
+    "temp_rolling_6": 4.9391,
+    "wind_speed": 4.3703
+  }
+}

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AtmoSense — Weather Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="noise"></div>
+<div class="sky-bg">
+  <div class="aurora aurora-1"></div>
+  <div class="aurora aurora-2"></div>
+  <div class="aurora aurora-3"></div>
+  <div class="grid-overlay"></div>
+</div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <span class="brand-icon">◈</span>
+      <span class="brand-name">AtmoSense</span>
+      <span class="brand-tag">ML Weather Intelligence</span>
+    </div>
+    <div class="search-wrap">
+      <div class="search-bar" id="searchBar">
+        <span class="search-icon">⌕</span>
+        <input id="cityInput" type="text" placeholder="Enter city name…"
+          autocomplete="off"
+          onkeydown="if(event.key==='Enter') fetchWeather()">
+        <button class="search-btn" onclick="fetchWeather()">
+          <span>Analyse</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- WELCOME STATE -->
+  <div id="welcomeState" class="state-panel welcome-panel">
+    <div class="welcome-inner">
+      <div class="welcome-glyph">◈</div>
+      <div class="welcome-label">POWERED BY LSTM + XGBOOST</div>
+      <h1 class="welcome-title">Intelligent<br><em>Weather Analysis</em></h1>
+      <p class="welcome-desc">Real-time meteorological data fused with machine learning. Temperature forecasting via Encoder-Decoder BiLSTM. Rain prediction via XGBoost classifier.</p>
+      <div class="model-pills">
+        <div class="pill" id="lstm-mae">
+          <span class="pill-dot dot-lstm"></span>
+          BiLSTM · MAE ±3.44°C
+        </div>
+        <div class="pill" id="xgboost-auc">
+          <span class="pill-dot dot-xgb"></span>
+          XGBoost · AUC 0.99
+        </div>
+        <div class="pill">
+          <span class="pill-dot dot-meteo"></span>
+          Open-Meteo API
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING STATE -->
+  <div id="loadingState" class="state-panel loading-panel">
+    <div class="loading-inner">
+      <div class="loader-ring">
+        <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" stroke="var(--accent)" stroke-width="2" fill="none" stroke-dasharray="50 150" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 40 40" to="360 40 40" dur="1.2s" repeatCount="indefinite"/></circle></svg>
+      </div>
+      <div class="loader-text">
+        <span class="loader-step" id="loaderStep">Fetching meteorological data…</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ERROR STATE -->
+  <div id="errorState" class="state-panel error-panel">
+    <div class="error-inner">
+      <div class="error-glyph">⚠</div>
+      <p id="errorMsg">City not found. Please try another.</p>
+      <button class="retry-btn" onclick="setState('welcome')">← Back</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="dashboard">
+
+    <!-- TOP STRIP: City + Core Stats -->
+    <div class="top-strip">
+      <div class="city-block">
+        <div class="city-name" id="cityLabel">—</div>
+        <div class="city-meta" id="cityMeta">—</div>
+      </div>
+      <div class="core-stats" id="coreStats"></div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="main-grid">
+
+      <!-- HERO TEMPERATURE CARD -->
+      <div class="card hero-card">
+        <div class="hero-inner">
+          <div class="hero-left">
+            <div class="temp-main">
+              <span class="temp-value" id="tempValue">—</span>
+              <span class="temp-deg">°C</span>
+            </div>
+            <div class="temp-range-bar" id="tempRangeBar"></div>
+            <div class="hero-desc" id="heroDesc">—</div>
+          </div>
+          <div class="hero-right">
+            <div class="weather-icon-xl" id="heroIcon">—</div>
+            <div class="feels-chip">
+              <span class="feels-label">FEELS LIKE</span>
+              <span class="feels-val" id="feelsLike">—°C</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rain prediction banner -->
+        <div class="rain-banner" id="rainBanner">
+          <div class="rain-banner-left">
+            <div class="rain-icon" id="rainIcon">—</div>
+            <div class="rain-text">
+              <div class="rain-title" id="rainTitle">—</div>
+              <div class="rain-sub" id="rainSub">—</div>
+            </div>
+          </div>
+          <div class="rain-meter">
+            <div class="rain-prob-label">RAIN PROBABILITY</div>
+            <div class="rain-prob-bar">
+              <div class="rain-prob-fill" id="rainProbFill"></div>
+            </div>
+            <div class="rain-prob-val" id="rainProbVal">—%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLOUD COVER CARD -->
+      <div class="card cloud-card">
+        <div class="card-label">CLOUD ANALYSIS</div>
+        <div class="cloud-layers" id="cloudLayers"></div>
+        <div class="cloud-total" id="cloudTotal"></div>
+      </div>
+
+    </div>
+
+    <!-- LSTM FORECAST STRIP -->
+    <div class="card forecast-strip-card">
+      <div class="strip-header">
+        <div class="card-label">LSTM TEMPERATURE FORECAST</div>
+        <div class="model-badge" id="model-badge-lstm">
+          <span class="badge-dot"></span>
+          Encoder-Decoder BiLSTM · MAE ±3.44°C
+        </div>
+      </div>
+      <div class="forecast-strip" id="forecastStrip"></div>
+    </div>
+
+    <!-- BOTTOM GRID -->
+    <div class="bottom-grid">
+
+      <!-- WIND + PRESSURE -->
+      <div class="card atmo-card">
+        <div class="card-label">ATMOSPHERIC</div>
+        <div class="atmo-stats" id="atmoStats"></div>
+      </div>
+
+      <!-- HUMIDITY + PRECIPITATION -->
+      <div class="card hydro-card">
+        <div class="card-label">HYDROLOGY</div>
+        <div class="hydro-stats" id="hydroStats"></div>
+      </div>
+
+      <!-- 5-DAY FORECAST -->
+      <div class="card five-day-card">
+        <div class="card-label">5-DAY OUTLOOK</div>
+        <div class="five-day-list" id="fiveDayList"></div>
+      </div>
+
+    </div>
+
+    <!-- MODELS GRID: LSTM + XGBOOST side by side -->
+    <div class="models-grid">
+
+      <!-- LSTM MODEL CARD -->
+      <div class="card lstm-card">
+        <div class="strip-header">
+          <div class="card-label">LSTM TEMPERATURE MODEL — PERFORMANCE</div>
+          <div class="model-badge">
+            <span class="badge-dot"></span>
+            Encoder-Decoder BiLSTM
+          </div>
+        </div>
+
+        <!-- Architecture summary -->
+        <div class="lstm-arch" id="lstmArch"></div>
+
+        <!-- Per-step MAE chart -->
+        <div class="lstm-mae-title">PER-STEP FORECAST ERROR (MAE °C)</div>
+        <div class="lstm-mae-bars" id="lstmMaeBars"></div>
+
+        <!-- Key metrics row -->
+        <div class="lstm-metrics" id="lstmMetrics"></div>
+      </div>
+
+      <!-- XGBOOST FEATURE IMPORTANCE -->
+      <div class="card xgb-card">
+        <div class="strip-header">
+          <div class="card-label">XGBOOST RAIN MODEL — FEATURE INFLUENCE</div>
+          <div class="model-badge" id="model-badge">
+            <span class="badge-dot badge-xgb"></span>
+            Accuracy 89.2% · AUC 0.89
+          </div>
+        </div>
+        <div class="xgb-features" id="xgbFeatures"></div>
+      </div>
+
+    </div>
+
+  </div><!-- /dashboard -->
+
+</div><!-- /container -->
+
+<script src="/static/script.js"></script>
+</body>
+</html>

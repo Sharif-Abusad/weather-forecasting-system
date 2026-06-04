@@ -1,0 +1,64 @@
+{
+  "model": "BiLSTM Encoder-Decoder",
+  "target": "temperature",
+  "features": [
+    "temperature",
+    "temp_lag_1",
+    "temp_lag_24",
+    "temp_rolling_6",
+    "humidity",
+    "surface_pressure",
+    "total_cloud_cover",
+    "wind_speed",
+    "hour_sin",
+    "hour_cos",
+    "month_sin",
+    "month_cos"
+  ],
+  "target_idx": 0,
+  "lookback": 24,
+  "forecast_n": 5,
+  "n_features": 12,
+  "lstm_units": 64,
+  "batch_size": 16,
+  "learning_rate": 0.0005,
+  "seed": 42,
+  "best_epoch": 45,
+  "best_val_loss": 0.000987,
+  "train_samples": 6095,
+  "val_samples": 1306,
+  "test_samples": 1307,
+  "metrics": {
+    "mae_celsius": 1.8548,
+    "rmse_celsius": 2.1953,
+    "r2_score": 0.7858
+  },
+  "per_step_metrics": {
+    "+1h": {
+      "mae": 1.7732,
+      "rmse": 2.0949,
+      "r2": 0.8051
+    },
+    "+2h": {
+      "mae": 1.6676,
+      "rmse": 1.974,
+      "r2": 0.8266
+    },
+    "+3h": {
+      "mae": 1.8665,
+      "rmse": 2.1865,
+      "r2": 0.7873
+    },
+    "+4h": {
+      "mae": 1.9555,
+      "rmse": 2.3067,
+      "r2": 0.7635
+    },
+    "+5h": {
+      "mae": 2.0111,
+      "rmse": 2.3896,
+      "r2": 0.7466
+    }
+  },
+  "scaler_path": "models/scalers\\lstm_temp_scaler.pkl"
+}
