@@ -1,0 +1,23 @@
+# ── Generated figures — too large, reproducible from notebooks ──
+notebooks/eda_figures/
+models/xgboost/*.png
+models/lstm/*.png
+
+# ── Model artifacts — large binary files ──
+models/xgboost/rain_model.json
+models/xgboost/best_model.json
+models/lstm/lstm_temp_model.keras
+models/lstm/best_model.keras
+models/scalers/lstm_temp_scaler.pkl
+
+# ── Data files — too large for GitHub ──
+data/raw/
+data/processed/
+data/archives/
+
+# ── Environment ──
+.env
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
