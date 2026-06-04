@@ -69,7 +69,7 @@ async function initMae() {
       auc: meta.xgboost.roc_auc,
       feature_importance: meta.xgboost.feature_importance_gain
     };
-    
+
     XGB_IMPORTANCE = XGB_META.feature_importance;
     XGB_MAX = Math.max(...Object.values(XGB_IMPORTANCE));
 
@@ -83,24 +83,6 @@ async function initMae() {
     `
 }
 initMae();
-// ── XGBoost feature importance (from model_meta.json) ──
-// const XGB_IMPORTANCE = {
-//   precipitation:    125.12,
-//   month:            33.19,
-//   low_cloud_cover:  23.99,
-//   high_cloud_cover: 19.50,
-//   surface_pressure: 10.25,
-//   total_cloud_cover:10.10,
-//   temperature:       7.95,
-//   wind_speed:        4.70,
-//   humidity:          5.72,
-//   temp_rolling_6:    6.22,
-//   temp_lag_1:        6.19,
-//   temp_lag_24:       5.77,
-//   medium_cloud_cover:7.99,
-// };
-
-
 
 // ── Loader messages ──
 const LOADER_STEPS = [
@@ -177,7 +159,6 @@ async function fetchWeather() {
 
 // ── Render ───────────────────────────────────────
 function renderDashboard(data) {
-  console.log((data))
   const c    = data.current;        // fetch_current_weather() dict
   const rain = data.rain_prediction; // { rain_tomorrow, probability, confidence, threshold_used }
   const hourly = data.hourly || []; // [{ time: "+1h", temp, humidity }]
@@ -357,9 +338,6 @@ function renderDashboard(data) {
     </div>
   `).join('');
 
-  // ── LSTM model info card ─────────────────────
-  // const meta = data.lstm_meta || {};
-
   // Architecture chips — from model_meta.json
   const LSTM_ARCH = [
     { val: `${LSTM_META.lookback}`,  label: 'Lookback hrs' },
@@ -376,7 +354,6 @@ function renderDashboard(data) {
   `).join('');
 
   // Per-step MAE bars — from model_meta.json
-  // const PER_STEP_MAE = await loadMaeValues(); // { '+1h': 3.71, '+2h': 3.11, '+3h': 3.31, '+4h': 3.50, '+5h': 3.57 };
   const maxMae = Math.max(...Object.values(PER_STEP_MAE));
   document.getElementById('lstmMaeBars').innerHTML = Object.entries(PER_STEP_MAE).map(([step, mae]) => {
     const heightPct = Math.round((mae / (maxMae * 1.2)) * 100);
@@ -413,13 +390,12 @@ function renderDashboard(data) {
       <div class="lstm-metric-label">${m.label}</div>
     </div>
   `).join('');
-  // <span class="badge-dot badge-xgb"></span>
-  // ── XGBoost feature importance ───────────────
-  // document.getElementById('model-badge').innerHTML = 
+
   document.getElementById('model-badge').innerHTML = `
   <span class="badge-dot badge-xgb"></span>
   Accuracy ${(XGB_META.accuracy * 100).toFixed(1)}% · AUC ${XGB_META.auc.toFixed(2)}
-`;
+  `;
+
   const xgbEl = document.getElementById('xgbFeatures');
   // Highlight features actually present in current observation
   const liveFeats = new Set(Object.keys(c));
