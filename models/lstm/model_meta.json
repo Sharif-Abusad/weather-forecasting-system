@@ -23,42 +23,42 @@
   "batch_size": 16,
   "learning_rate": 0.0005,
   "seed": 42,
-  "best_epoch": 45,
-  "best_val_loss": 0.000987,
-  "train_samples": 6095,
-  "val_samples": 1306,
-  "test_samples": 1307,
+  "best_epoch": 39,
+  "best_val_loss": 0.000583,
+  "train_samples": 30640,
+  "val_samples": 6566,
+  "test_samples": 6566,
   "metrics": {
-    "mae_celsius": 1.8548,
-    "rmse_celsius": 2.1953,
-    "r2_score": 0.7858
+    "mae_celsius": 1.0912,
+    "rmse_celsius": 1.3169,
+    "r2_score": 0.9601
   },
   "per_step_metrics": {
     "+1h": {
-      "mae": 1.7732,
-      "rmse": 2.0949,
-      "r2": 0.8051
+      "mae": 0.9509,
+      "rmse": 1.1245,
+      "r2": 0.9708
     },
     "+2h": {
-      "mae": 1.6676,
-      "rmse": 1.974,
-      "r2": 0.8266
+      "mae": 1.0527,
+      "rmse": 1.2477,
+      "r2": 0.9641
     },
     "+3h": {
-      "mae": 1.8665,
-      "rmse": 2.1865,
-      "r2": 0.7873
+      "mae": 1.0931,
+      "rmse": 1.3121,
+      "r2": 0.9604
     },
     "+4h": {
-      "mae": 1.9555,
-      "rmse": 2.3067,
-      "r2": 0.7635
+      "mae": 1.17,
+      "rmse": 1.4183,
+      "r2": 0.9538
     },
     "+5h": {
-      "mae": 2.0111,
-      "rmse": 2.3896,
-      "r2": 0.7466
+      "mae": 1.1891,
+      "rmse": 1.4549,
+      "r2": 0.9514
     }
   },
-  "scaler_path": "models/scalers\\lstm_temp_scaler.pkl"
+  "scaler_path": "models/scalers\\lstm_temp_scaler2.pkl"
 }

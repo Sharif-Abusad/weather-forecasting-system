@@ -142,18 +142,23 @@ weather-forecasting-system/
 │
 ├── data/
 │   ├── archives/                   # Monthly zipped raw data archives
-│   │   ├── azamgarh_weather_APR_2025.zip
-│   │   ├── azamgarh_weather_AUG_2025.zip
-│   │   ├── azamgarh_weather_DEC_2025.zip
-│   │   ├── azamgarh_weather_FEB_2025.zip
-│   │   ├── azamgarh_weather_JAN_2025.zip
-│   │   ├── azamgarh_weather_JUL_2025.zip
-│   │   ├── azamgarh_weather_JUN_2025.zip
-│   │   ├── azamgarh_weather_MAR_2025.zip
-│   │   ├── azamgarh_weather_MAY_2025.zip
-│   │   ├── azamgarh_weather_NOV_2025.zip
-│   │   ├── azamgarh_weather_OCT_2025.zip
-│   │   └── azamgarh_weather_SEP_2025.zip
+│   │   ├── 2021/
+|   │   │   ├── azamgarh_weather_APR_2025.zip
+|   │   │   ├── azamgarh_weather_AUG_2025.zip
+|   │   │   ├── azamgarh_weather_DEC_2025.zip
+|   │   │   ├── azamgarh_weather_FEB_2025.zip
+|   │   │   ├── azamgarh_weather_JUL_2025.zip
+|   │   │   ├── azamgarh_weather_JUN_2025.zip
+|   │   │   ├── azamgarh_weather_MAR_2025.zip
+|   │   │   ├── azamgarh_weather_MAY_2025.zip
+|   │   │   ├── azamgarh_weather_NOV_2025.zip
+|   │   │   ├── azamgarh_weather_OCT_2025.zip
+|   │   │   └── azamgarh_weather_SEP_2025.zip
+|   │   │
+|   │   ├── 2022/
+|   │   ├── 2023/
+|   │   ├── 2024/
+|   │   └── 2025/
 │   │
 │   ├── processed/                  # Cleaned and feature-engineered CSVs
 │   │   ├── azamgarh_weather_clean.csv
@@ -161,28 +166,34 @@ weather-forecasting-system/
 │   │   └── azamgarh_weather_raw.csv
 │   │
 │   └── raw/                        # Raw ERA5 data streams (by month)
-│       ├── APR/
-│       │   ├── data_stream-oper_stepType-a...
-│       │   └── data_stream-oper_stepType-i...
-│       ├── AUG/
-│       ├── DEC/
-│       ├── FEB/
-│       ├── JAN/
-│       ├── JUL/
-│       ├── JUN/
-│       ├── MAR/
-│       ├── MAY/
-│       ├── NOV/
-│       ├── OCT/
-│       └── SEP/
+|       ├── 2021/
+|       │   ├── APR/
+|       │   │   ├── data_stream-oper_stepType-a...
+|       │   │   └── data_stream-oper_stepType-i...
+|       │   ├── AUG/
+|       │   ├── DEC/
+|       │   ├── JAN/
+|       │   ├── JUL/
+|       │   ├── JUN/
+|       │   ├── MAR/
+|       │   ├── MAY/
+|       │   ├── NOV/
+|       │   ├── OCT/
+|       │   └── SEP/
+|       ├── 2022/
+|       ├── 2023/
+|       ├── 2024/
+|       └── 2025/
 │
 ├── models/
 │   ├── lstm/                       # LSTM temperature model
 │   │   ├── best_model.keras
 │   │   ├── lstm_temp_model.keras   # Trained BiLSTM model
-│   │   └── model_meta.json              
+│   │   └── model_meta.json  
+|   |         
 │   ├── scalers/
 │   │   └── lstm_temp_scaler.pkl    # Fitted scalers for normalization
+|   |
 │   └── xgboost/                    # XGBoost rainfall model
 │       ├── model_meta.json
 │       └── rain_model.json
@@ -232,7 +243,7 @@ Weather data is sourced from **ERA5 (ECMWF Reanalysis v5)** via the **Copernicus
 | **Location** | Azamgarh, UP, India (26.04°N, 83.11°E) |
 | **Period** | January 2025 – December 2025 |
 | **Frequency** | Hourly |
-| **Total rows** | ~8,700 |
+| **Total rows** | ~43,800 |
 | **Features** | 18 columns (12 numeric + 5 temporal + 1 target) |
 | **Missing values** | None |
 | **Download format** | NetCDF → CSV |
@@ -481,8 +492,8 @@ Returns temperature forecast for the next N hours.
 - [x] BiLSTM encoder-decoder temperature forecasting
 - [x] Flask REST API
 - [x] Open-Meteo live integration
+- [x] Sin/cos cyclical encoding for hour and month
 - [ ] Add humidity to LSTM feature set
-- [ ] Sin/cos cyclical encoding for hour and month
 - [ ] Extend LSTM forecast horizon to 24 hours
 - [ ] Deploy to cloud (Heroku / Railway / AWS)
 - [ ] Add automated daily retraining pipeline
