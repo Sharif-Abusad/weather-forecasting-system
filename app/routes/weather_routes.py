@@ -19,7 +19,11 @@ from datetime import datetime, timedelta
 import pytz
 from fastapi import APIRouter, HTTPException
 
-from app.services.ml_services import (
+# from app.services.ml_services import (
+#     predict_rain,
+#     predict_temperature
+# )
+from app.services.predictor import(
     predict_rain,
     predict_temperature
 )
